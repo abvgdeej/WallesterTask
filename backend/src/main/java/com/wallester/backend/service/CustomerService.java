@@ -15,6 +15,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,10 +44,26 @@ public class CustomerService {
         repository.save(entity);
     }
 
+    /**
+     * Updates customer with received id if he presents in DB.<br>
+     * This operation executes in transaction.
+     *
+     * @param id    customer identifier in DB
+     * @param dto   customer DTO
+     * @return      updated customer DTO
+     */
     @Transactional
     public CustomerDto editCustomer(int id, CustomerDto dto) {
-        //todo
-        return null;
+        Optional<CustomerEntity> optional = repository.findById(id);
+        if (optional.isPresent()) {
+            CustomerEntity entity = optional.get();
+            CustomerEntity newEntity =  mapper.mapToEntity(dto);
+            newEntity.setId(entity.getId());
+            repository.save(newEntity);
+            return mapper.mapToDto(newEntity);
+        } else {
+            throw ApiException.badRequestError("There is no customer with id = " + id);
+        }
     }
 
     /**

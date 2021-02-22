@@ -66,8 +66,8 @@ public class CustomerController {
                                                              BindingResult result) {
         ExceptionUtils.checkValidationErrors(result);
         CustomerDto dto = request.getCustomerDto();
-        //todo CustomerDto dtoResult =
-        return new ResponseEntity<>(HttpStatus.OK);
+        CustomerDto dtoResult = service.editCustomer(id, dto);
+        return new ResponseEntity<>(new CustomerEditResponse(dtoResult), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Returns \"Customer\" entity with received parameters.",
