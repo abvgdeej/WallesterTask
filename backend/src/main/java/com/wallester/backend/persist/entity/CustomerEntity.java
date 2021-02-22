@@ -13,13 +13,13 @@ public class CustomerEntity {
     private String firstName;
     private String lastName;
     private Date birthDate;
-    @Enumerated(EnumType.ORDINAL)
     private Gender gender;
     private String email;
     private String address;
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id;
     }
@@ -58,7 +58,7 @@ public class CustomerEntity {
         this.birthDate = birthDate;
     }
 
-    @Basic
+    @Enumerated(EnumType.STRING)
     @Column(name = "gender")
     public Gender getGender() {
         return gender;

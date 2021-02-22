@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @ApiModel("Request body for create new customer")
 public class CustomerCreateRequest {
-    @JsonProperty(required = true)
+    @JsonProperty(value = "customer", required = true)
     @ApiModelProperty("Customer")
     private CustomerDto customerDto;
 }

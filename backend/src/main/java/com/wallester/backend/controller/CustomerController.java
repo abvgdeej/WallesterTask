@@ -1,41 +1,74 @@
 package com.wallester.backend.controller;
 
 import com.wallester.backend.controller.request.CustomerCreateRequest;
+import com.wallester.backend.controller.request.CustomerEditRequest;
 import com.wallester.backend.controller.response.CustomerEditResponse;
 import com.wallester.backend.controller.response.CustomersResponse;
+import com.wallester.backend.domain.dto.CustomerDto;
 import com.wallester.backend.service.CustomerService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
 
-@RestController("v1/customer")
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.util.List;
+
+@RestController
+@RequestMapping("v1/customer")
 public class CustomerController {
-    private CustomerService service;
+    private final CustomerService service;
 
-    @PostMapping("/")
-    public ResponseEntity<?> createCustomer(CustomerCreateRequest request) {
-        //todo
+    public CustomerController(CustomerService service) {
+        this.service = service;
+    }
+
+    @PostMapping(path = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createCustomer(@RequestBody CustomerCreateRequest request) {
+        CustomerDto dto = request.getCustomerDto();
+        if (request == null) {
+            //todo throw new ServiceException
+        }
+        service.createCustomer(dto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("/")
-    public ResponseEntity<CustomerEditResponse> editCustomer() {
-        //todo
+    @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CustomerEditResponse> editCustomer(@PathVariable("id") int id,
+                                                             @RequestBody CustomerEditRequest request) {
+        CustomerDto dto = request.getCustomerDto();
+        if (dto == null) {
+            //todo return new ServiceException
+        }
+        //todo CustomerDto dtoResult =
         return new ResponseEntity<>(new CustomerEditResponse(), HttpStatus.OK);
     }
 
-    @GetMapping("/")
-    public ResponseEntity<CustomersResponse> findCustomersByNames() {
-        //todo
-        return new ResponseEntity<>(new CustomersResponse(), HttpStatus.OK);
+    @GetMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CustomersResponse> findCustomersByNames(
+            @RequestParam(value = "firstName")
+            @NotBlank
+            @Size(max = 100, message = "First name must be less than 100 characters") String firstName,
+            @RequestParam(value = "lastName")
+            @NotBlank
+            @Size(max = 100, message = "Last name must be less than 100 characters") String lastName) {
+        List<CustomerDto> dtoList = service.findByFirstNameAndLastName(firstName, lastName);
+        if (CollectionUtils.isEmpty(dtoList)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        CustomersResponse response = new CustomersResponse(dtoList);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/all")
+    @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CustomersResponse> findAllCustomers() {
-        //todo
-        return new ResponseEntity<>(new CustomersResponse(), HttpStatus.OK);
+        List<CustomerDto> dtoList = service.findAll();
+        if (CollectionUtils.isEmpty(dtoList)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        CustomersResponse response = new CustomersResponse(dtoList);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

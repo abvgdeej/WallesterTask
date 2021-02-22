@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Data
 @ApiModel("Response body witch contains list of customers")
 public class CustomersResponse {
