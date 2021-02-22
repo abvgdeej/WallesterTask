@@ -2,13 +2,18 @@ package com.wallester.backend.service;
 
 import com.wallester.backend.domain.dto.CustomerDto;
 import com.wallester.backend.domain.mapper.CustomerMapper;
+import com.wallester.backend.exception.ApiException;
 import com.wallester.backend.persist.entity.CustomerEntity;
 import com.wallester.backend.persist.repository.CustomerRepository;
 import lombok.Data;
+import org.apache.tomcat.jni.Local;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +32,13 @@ public class CustomerService {
      * @param dto customer DTO from request
      */
     public void createCustomer(CustomerDto dto) {
+        LocalDate date = dto.getBirthDate().toLocalDate();
+        LocalDate currentDate = LocalDate.now();
+        int difference = Period.between(date, currentDate).getYears();
+        if (difference < 18 || difference > 60) {
+            throw new ApiException("Customer's age must be between 18 and 60", 400);
+        }
+
         CustomerEntity entity = mapper.mapToEntity(dto);
         repository.save(entity);
     }
