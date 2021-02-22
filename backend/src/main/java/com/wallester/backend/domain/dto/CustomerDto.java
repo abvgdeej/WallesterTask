@@ -14,7 +14,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Calendar;
+import java.sql.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,7 +40,7 @@ public class CustomerDto {
     @NotNull(message = "Birth date cannot be null")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
     @ApiModelProperty(value = "Birth date", required = true, position = 3, example = "01.01.1990")
-    private Calendar birthDate;
+    private Date birthDate;
 
     @JsonProperty(value = "gender", required = true)
     @JsonInclude
