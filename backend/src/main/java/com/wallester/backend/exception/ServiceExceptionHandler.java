@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 
@@ -16,6 +17,25 @@ import java.time.OffsetDateTime;
 @ControllerAdvice
 @Slf4j
 public class ServiceExceptionHandler {
+    /**
+     * Catches {@link ConstraintViolationException}'s
+     *
+     * @param ex        Exception
+     * @param response  Server response
+     * @return          Response-error DTO
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseBody
+    public ResponseErrorDto handleValidationExceptions(ConstraintViolationException ex, HttpServletResponse response) {
+        log.error("Validation error: ", ex);
+        ResponseErrorDto dto = new ResponseErrorDto();
+        dto.setTime(OffsetDateTime.now());
+        dto.setMessage(ex.getMessage());
+        dto.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        return dto;
+    }
+
     /**
      * Catches Jackson's exception after JSON parsing.
      *

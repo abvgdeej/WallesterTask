@@ -5,9 +5,9 @@ import com.wallester.backend.controller.request.CustomerEditRequest;
 import com.wallester.backend.controller.response.CustomerEditResponse;
 import com.wallester.backend.controller.response.CustomersResponse;
 import com.wallester.backend.domain.dto.CustomerDto;
-import com.wallester.backend.utils.ExceptionUtils;
 import com.wallester.backend.exception.ResponseErrorDto;
 import com.wallester.backend.service.CustomerService;
+import com.wallester.backend.utils.ExceptionUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,6 +25,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("v1/customer")
 @Api(tags = {"Customers"}, consumes = "application/json", produces = "application/json")
@@ -85,10 +87,7 @@ public class CustomerController {
             @RequestParam(value = "lastName")
             @Valid
             @NotBlank
-            @Size(max = 100, message = "Last name must be less than 100 characters") String lastName,
-            BindingResult result) {
-        ExceptionUtils.checkValidationErrors(result);
-
+            @Size(max = 100, message = "Last name must be less than 100 characters") String lastName) {
         List<CustomerDto> dtoList = service.findByFirstNameAndLastName(firstName, lastName);
         if (CollectionUtils.isEmpty(dtoList)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
