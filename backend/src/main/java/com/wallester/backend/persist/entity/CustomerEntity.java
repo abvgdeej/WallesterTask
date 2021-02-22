@@ -9,7 +9,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "customers", schema = "wallester", catalog = "postgres")
 public class CustomerEntity {
-    private int id;
+    private Integer id;
     private String firstName;
     private String lastName;
     private Date birthDate;
@@ -20,11 +20,11 @@ public class CustomerEntity {
 
     @Id
     @Column(name = "id")
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -93,7 +93,7 @@ public class CustomerEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CustomerEntity that = (CustomerEntity) o;
-        return id == that.id &&
+        return Objects.equals(id, that.id) &&
                 Objects.equals(firstName, that.firstName) &&
                 Objects.equals(lastName, that.lastName) &&
                 Objects.equals(birthDate, that.birthDate) &&
