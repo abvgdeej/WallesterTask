@@ -1,0 +1,47 @@
+server:
+  port: ${DB_SERVICE_PORT:8080}
+spring:
+  application:
+    name: backend
+  message: hello
+  main:
+    allow-bean-definition-overriding: true
+  liquibase:
+    change-log: classpath:liquibase/rootChangeLog.xml
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: admin
+    password: qwerty
+    driverClassName: org.postgresql.Driver
+    maximumPoolSize: 5
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+        maxLifetime: 500
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    database: postgresql
+    hibernate.ddl-auto: validate
+    generate-ddl: false
+    properties.hibernate:
+      temp.use_jdbc_metadata_defaults: false
+      show-sql: true
+      format_sql: true
+      generate_statistics: false
+      globally_quoted_identifiers: false
+      order_inserts: true
+      order_updates: true
+      batch_versioned_data: true
+      enable_lazy_load_no_trans: true
+      cache:
+        use_second_level_cache: false
+        use_query_cache: false
+      connection:
+        release_mode: AFTER_TRANSACTION
+      event:
+        merge:
+          entity_copy_observer: allow
