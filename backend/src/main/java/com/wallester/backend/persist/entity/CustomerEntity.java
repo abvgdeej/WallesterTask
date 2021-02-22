@@ -1,5 +1,7 @@
 package com.wallester.backend.persist.entity;
 
+import com.wallester.backend.utils.Gender;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
@@ -11,7 +13,8 @@ public class CustomerEntity {
     private String firstName;
     private String lastName;
     private Date birthDate;
-    private String gender;
+    @Enumerated(EnumType.ORDINAL)
+    private Gender gender;
     private String email;
     private String address;
 
@@ -57,11 +60,11 @@ public class CustomerEntity {
 
     @Basic
     @Column(name = "gender")
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 
