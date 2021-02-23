@@ -168,7 +168,7 @@ public class CustomerController {
     })
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CustomersResponse> findAllCustomers() {
-        return findAllCustomersCommon(0, 5, null, null);
+        return findAllCustomersCommon(0, Integer.MAX_VALUE, null, null);
     }
 
     @ApiOperation(value = "Returns all saved \"Customer\" entities. " +

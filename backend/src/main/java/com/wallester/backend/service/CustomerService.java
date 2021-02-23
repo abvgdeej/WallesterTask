@@ -5,7 +5,6 @@ import com.wallester.backend.domain.dto.CustomerDto;
 import com.wallester.backend.domain.mapper.CustomerMapper;
 import com.wallester.backend.exception.ApiException;
 import com.wallester.backend.persist.entity.CustomerEntity;
-import com.wallester.backend.persist.entity.CustomerEntityTables;
 import com.wallester.backend.persist.repository.CustomerRepository;
 import com.wallester.backend.utils.PaginationUtils;
 import lombok.AllArgsConstructor;
