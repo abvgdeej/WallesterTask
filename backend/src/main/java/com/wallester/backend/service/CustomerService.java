@@ -1,19 +1,22 @@
 package com.wallester.backend.service;
 
+import com.wallester.backend.controller.response.CustomersResponse;
 import com.wallester.backend.domain.dto.CustomerDto;
 import com.wallester.backend.domain.mapper.CustomerMapper;
 import com.wallester.backend.exception.ApiException;
 import com.wallester.backend.persist.entity.CustomerEntity;
+import com.wallester.backend.persist.entity.CustomerEntityTables;
 import com.wallester.backend.persist.repository.CustomerRepository;
+import com.wallester.backend.utils.PaginationUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.jni.Local;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
@@ -85,13 +88,54 @@ public class CustomerService {
     }
 
     /**
-     * Returns all saved customers.
+     * Returns all customers with matched names
      *
-     * @return all {@link CustomerEntity}
+     * @param firstName customer's first name
+     * @param lastName  customer's last name
+     * @return          all matches
      */
-    public List<CustomerDto> findAll() {
-        return repository.findAll().stream()
+    public CustomersResponse findByFirstNameAndLastNameWithPagination(String firstName, String lastName,
+                                                                      Integer page, Integer elements,
+                                                                      String sortAsc, String sortDesc) {
+        log.debug("Trying to find entities in the DB with firstName = {} and lastName = {}", firstName, lastName);
+        Pageable pageable = PaginationUtils.makePageable(page, elements, sortAsc, sortDesc);
+
+        Page<CustomerEntity> resultPage =  repository.findAllByFirstNameAndLastName(firstName, lastName, pageable);
+        return getCustomersResponse(resultPage);
+    }
+
+    /**
+     * Returns all saved customers. This method supports paging and sorting.
+     *
+     * @param page      page
+     * @param elements  number of elements
+     * @param sortAsc   sort by (asc)
+     * @param sortDesc  sort by (desc)
+     * @return          all {@link CustomerEntity} on the page
+     */
+    public CustomersResponse findAll(Integer page, Integer elements,
+                                     String sortAsc, String sortDesc) {
+        Pageable pageable = PaginationUtils.makePageable(page, elements, sortAsc, sortDesc);
+
+        Page<CustomerEntity> resultPage = repository.findAll(pageable);
+        return getCustomersResponse(resultPage);
+    }
+
+    /**
+     * Returns operation result (duplicated code) in methods
+     * {@link #findByFirstNameAndLastNameWithPagination(String, String, Integer, Integer, String, String)}
+     * and {@link #findAll(Integer, Integer, String, String)}
+     *
+     * @param resultPage    page from repository
+     * @return              filled {@link CustomersResponse}
+     */
+    private CustomersResponse getCustomersResponse(Page<CustomerEntity> resultPage) {
+        List<CustomerDto> resultList = resultPage.stream()
                 .map(mapper::mapToDto)
                 .collect(Collectors.toList());
+        if (resultList.size() > 0) {
+            return new CustomersResponse(resultList, resultPage.getTotalPages(), resultPage.getTotalElements());
+        }
+        return new CustomersResponse(resultList, null, null);
     }
 }

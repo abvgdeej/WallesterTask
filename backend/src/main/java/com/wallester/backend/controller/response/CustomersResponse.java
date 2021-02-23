@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
@@ -17,4 +18,14 @@ public class CustomersResponse {
     @JsonProperty(value = "customer_list", required = true)
     @ApiModelProperty("List of customers")
     private List<CustomerDto> customerDtoList;
+    @JsonProperty(value = "total_pages")
+    @ApiModelProperty("Total pages")
+    private Integer totalPages;
+    @JsonProperty(value = "total_elements")
+    @ApiModelProperty("Total elements")
+    private Long totalElements;
+
+    public CustomersResponse(List<CustomerDto> customerDtoList) {
+        this.customerDtoList = customerDtoList;
+    }
 }

@@ -23,7 +23,7 @@ import java.time.OffsetDateTime;
 public class ServiceExceptionHandler {
     @ExceptionHandler(value = {Exception.class})
     @ResponseBody
-    public ResponseErrorDto handleUnknownExceptions(Exception ex) throws Exception {
+    public ResponseErrorDto handleUnknownExceptions(Exception ex, HttpServletResponse response) throws Exception {
         Class<?> exClass = ex.getClass();
         if (exClass == ApiException.class
                 || exClass == ConstraintViolationException.class
@@ -37,6 +37,7 @@ public class ServiceExceptionHandler {
         dto.setTime(OffsetDateTime.now());
         dto.setMessage(ex.getMessage());
         dto.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         return dto;
     }
 
