@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="2021-02-22_0233" author="Aleksandr Pitasov" logicalFilePath="22_0233_backend.xml">
+        <sql dbms="postgresql" endDelimiter=";">
+            CREATE SCHEMA WALLESTER
+        </sql>
+
+        <createTable tableName="customers" schemaName="WALLESTER" remarks="Customers info">
+            <column name="id" type="INT(11)" remarks="">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="customers_pkey"/>
+            </column>
+            <column name="first_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="birth_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="gender" type="VARCHAR(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(200)"/>
+        </createTable>
+
+        <addAutoIncrement columnDataType="int(11)"
+                          columnName="id"
+                          incrementBy="1"
+                          schemaName="WALLESTER"
+                          startWith="1"
+                          tableName="customers"/>
+    </changeSet>
+</databaseChangeLog>
