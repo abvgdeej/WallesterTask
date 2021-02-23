@@ -2,6 +2,7 @@ package com.wallester.backend.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
@@ -38,6 +39,25 @@ public class ServiceExceptionHandler {
         dto.setMessage(ex.getMessage());
         dto.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        return dto;
+    }
+
+    /**
+     * Catches {@link PropertyReferenceException}'s
+     *
+     * @param ex        Exception
+     * @return          Response-error DTO
+     */
+    @ExceptionHandler(value = {PropertyReferenceException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ResponseErrorDto handlePaginationException(PropertyReferenceException ex) {
+        log.error("Pagination exception: ex", ex);
+
+        ResponseErrorDto dto = new ResponseErrorDto();
+        dto.setTime(OffsetDateTime.now());
+        dto.setMessage(ex.getMessage() + "; See API documentation for examples.");
+        dto.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         return dto;
     }
 

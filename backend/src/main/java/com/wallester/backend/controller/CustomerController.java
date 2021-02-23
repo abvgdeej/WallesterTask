@@ -6,7 +6,6 @@ import com.wallester.backend.controller.response.CustomerEditResponse;
 import com.wallester.backend.controller.response.CustomersResponse;
 import com.wallester.backend.domain.dto.CustomerDto;
 import com.wallester.backend.exception.ResponseErrorDto;
-import com.wallester.backend.persist.entity.CustomerEntityTables;
 import com.wallester.backend.service.CustomerService;
 import com.wallester.backend.utils.ExceptionUtils;
 import io.swagger.annotations.*;
@@ -130,35 +129,29 @@ public class CustomerController {
             @Size(max = 100, message = "Last name must be less than 100 characters")
             String lastName,
             @RequestParam(value = "page", required = false)
-            @ApiParam(name = "Page", value = "Number of page. Numbering starts from 0")
+            @ApiParam(name = "page", value = "Number of page. Numbering starts from 0", example = "1")
             Integer page,
             @RequestParam(value = "elements", required = false)
-            @ApiParam(name = "Elements", value = "Elements on the page. 5 by default.")
+            @ApiParam(name = "elements", value = "Elements on the page. 5 by default.", example = "2")
             Integer elements,
             @RequestParam(value = "sortAsc", required = false)
-            @ApiParam(name = "SortAsc", value = "Sort by (ASC)")
-            CustomerEntityTables sortAsc,
+            @ApiParam(name = "sortAsc", value = "Sort by (ASC)",
+                    example = "One of: {id, firstName, lastName, birtDate, gender, email, address}")
+            String sortAsc,
             @RequestParam(value = "sortDesc", required = false)
-            @ApiParam(name = "SortDesc", value = "Sort by (DESC)")
-            CustomerEntityTables sortDesc) {
-        String sortAscStr = null, SortDescStr = null;
-        if (sortAsc != null) {
-            sortAscStr = sortAsc.getValue();
-        }
-        if (sortDesc != null) {
-            SortDescStr = sortDesc.getValue();
-        }
-
+            @ApiParam(name = "sortDesc", value = "Sort by (DESC)",
+                    example = "One of: {id, firstName, lastName, birtDate, gender, email, address}")
+            String sortDesc) {
         CustomersResponse result = service.findByFirstNameAndLastNameWithPagination(
                 firstName, lastName,
-                page, elements, sortAscStr, SortDescStr);
+                page, elements, sortAsc, sortDesc);
         if (CollectionUtils.isEmpty(result.getCustomerDtoList())) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Returns all saved \"Customer\" entities. This endpoint always returns first page with 5 elements.",
+    @ApiOperation(value = "Returns all saved \"Customer\" entities. This endpoint returns all saved entities in one response.",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -183,34 +176,31 @@ public class CustomerController {
     @GetMapping(path = "/all-paged", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CustomersResponse> findAllCustomersPageAndSorting(
             @RequestParam(value = "page", required = false)
-            @ApiParam(name = "Page", value = "Number of page. Numbering starts from 0")
+            @ApiParam(name = "page", value = "Number of page. Numbering starts from 0", example = "1")
             Integer page,
             @RequestParam(value = "elements", required = false)
-            @ApiParam(name = "Elements", value = "Elements on the page. 5 by default.")
+            @ApiParam(name = "elements", value = "Elements on the page. 5 by default.", example = "2")
             Integer elements,
             @RequestParam(value = "sortAsc", required = false)
-            @ApiParam(name = "SortAsc", value = "Sort by (ASC)")
-            CustomerEntityTables sortAsc,
+            @ApiParam(name = "sortAsc", value = "Sort by (ASC)",
+                    example = "One of: {id, firstName, lastName, birtDate, gender, email, address}")
+            String sortAsc,
             @RequestParam(value = "sortDesc", required = false)
-            @ApiParam(name = "SortDesc", value = "Sort by (DESC)")
-            CustomerEntityTables sortDesc) {
+            @ApiParam(name = "sortDesc", value = "Sort by (DESC)",
+                    example = "One of: {id, firstName, lastName, birtDate, gender, email, address}")
+            String sortDesc) {
         return findAllCustomersCommon(page, elements, sortAsc, sortDesc);
     }
 
     private ResponseEntity<CustomersResponse> findAllCustomersCommon(Integer page, Integer elements,
-                                                                     CustomerEntityTables sortAsc,
-                                                                     CustomerEntityTables sortDesc) {
-        String sortAscStr = null, SortDescStr = null;
-        if (sortAsc != null) {
-            sortAscStr = sortAsc.getValue();
-        }
-        if (sortDesc != null) {
-            SortDescStr = sortDesc.getValue();
-        }
-
-        CustomersResponse result = service.findAll(page, elements, sortAscStr, SortDescStr);
+                                                                     String sortAsc,
+                                                                     String sortDesc) {
+        CustomersResponse result = service.findAll(page, elements, sortAsc, sortDesc);
         if (CollectionUtils.isEmpty(result.getCustomerDtoList())) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        for (CustomerDto customer : result.getCustomerDtoList()){
+            log.info("DTO: {}", customer);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

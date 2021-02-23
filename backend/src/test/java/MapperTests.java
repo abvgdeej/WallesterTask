@@ -2,6 +2,7 @@ import com.wallester.backend.domain.dto.CustomerDto;
 import com.wallester.backend.domain.mapper.CustomerMapper;
 import com.wallester.backend.persist.entity.CustomerEntity;
 import com.wallester.backend.utils.Gender;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -13,6 +14,7 @@ import static org.junit.Assert.assertNull;
 /**
  * Test cases for {@link CustomerMapper}
  */
+@Slf4j
 public class MapperTests {
     private static final long DATE = 631152000000L;
     private final CustomerMapper mapper = Mappers.getMapper(CustomerMapper.class);
@@ -34,6 +36,7 @@ public class MapperTests {
         CustomerDto dto = mapper.mapToDto(entity);
 
         //assert
+        log.info("DTO: {}", dto);
         assertEquals("First name is not equals", entity.getFirstName(), dto.getFirstName());
         assertEquals("Last name is not equals", entity.getLastName(), dto.getLastName());
         assertEquals("Birth date is not equals", entity.getBirthDate(), dto.getBirthDate());
