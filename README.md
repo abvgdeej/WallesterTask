@@ -31,12 +31,12 @@ And configuration below for settings.xml:
 ```xml
 <servers>
     <server>
-		<id>docker.io</id>
-		<username>*USERNAME*</username>
-		<password>*PASSWORD*</password>
-		<configuration>
-			<email>*EMAIL*</email>
-		</configuration>
-	</server>
+        <id>docker.io</id>
+        <username>*USERNAME*</username>
+        <password>*PASSWORD*</password>
+        <configuration>
+            <email>*EMAIL*</email>
+        </configuration>
+    </server>
 </servers>
 ```
