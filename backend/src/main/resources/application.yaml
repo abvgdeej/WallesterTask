@@ -47,3 +47,6 @@ spring:
       event:
         merge:
           entity_copy_observer: allow
+logging:
+  level:
+    org.zalando.logbook: TRACE
