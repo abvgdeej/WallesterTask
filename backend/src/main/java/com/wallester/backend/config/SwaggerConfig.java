@@ -19,7 +19,7 @@ import java.time.LocalTime;
 import java.time.ZonedDateTime;
 
 /**
- * Конфигурация Swagger
+ * Swagger config
  */
 @Configuration
 @EnableSwagger2
