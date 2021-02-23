@@ -5,7 +5,9 @@ import com.wallester.backend.domain.mapper.CustomerMapper;
 import com.wallester.backend.exception.ApiException;
 import com.wallester.backend.persist.entity.CustomerEntity;
 import com.wallester.backend.persist.repository.CustomerRepository;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.jni.Local;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
@@ -20,16 +22,15 @@ import java.util.stream.Collectors;
 
 @Service
 @Data
+@Slf4j
+@AllArgsConstructor
 public class CustomerService {
     private final CustomerMapper mapper = Mappers.getMapper(CustomerMapper.class);
     private final CustomerRepository repository;
 
-    public CustomerService(CustomerRepository repository) {
-        this.repository = repository;
-    }
-
     /**
      * Creates customer in DB
+     *
      * @param dto customer DTO from request
      */
     public void createCustomer(CustomerDto dto) {
@@ -41,6 +42,7 @@ public class CustomerService {
         }
 
         CustomerEntity entity = mapper.mapToEntity(dto);
+        log.debug("Trying to save customer in the DB: {}", entity);
         repository.save(entity);
     }
 
@@ -52,13 +54,15 @@ public class CustomerService {
      * @param dto   customer DTO
      * @return      updated customer DTO
      */
-    @Transactional
+    @Transactional(rollbackOn = Throwable.class)
     public CustomerDto editCustomer(int id, CustomerDto dto) {
+        log.debug("Trying to find entity in the DB with id = {}", id);
         Optional<CustomerEntity> optional = repository.findById(id);
         if (optional.isPresent()) {
             CustomerEntity entity = optional.get();
             CustomerEntity newEntity =  mapper.mapToEntity(dto);
             newEntity.setId(entity.getId());
+            log.debug("Trying to save updated customer in the DB: {}", newEntity);
             repository.save(newEntity);
             return mapper.mapToDto(newEntity);
         } else {
@@ -74,12 +78,15 @@ public class CustomerService {
      * @return          all matches
      */
     public List<CustomerDto> findByFirstNameAndLastName(String firstName, String lastName) {
+        log.debug("Trying to find entities in the DB with firstName = {} and lastName = {}", firstName, lastName);
         return repository.findAllByFirstNameAndLastName(firstName, lastName).stream()
                 .map(mapper::mapToDto)
                 .collect(Collectors.toList());
     }
 
     /**
+     * Returns all saved customers.
+     *
      * @return all {@link CustomerEntity}
      */
     public List<CustomerDto> findAll() {

@@ -8,10 +8,9 @@ import com.wallester.backend.domain.dto.CustomerDto;
 import com.wallester.backend.exception.ResponseErrorDto;
 import com.wallester.backend.service.CustomerService;
 import com.wallester.backend.utils.ExceptionUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,16 +24,14 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+@Slf4j
 @Validated
 @RestController
 @RequestMapping("v1/customer")
+@AllArgsConstructor
 @Api(tags = {"Customers"}, consumes = "application/json", produces = "application/json")
 public class CustomerController {
     private final CustomerService service;
-
-    public CustomerController(CustomerService service) {
-        this.service = service;
-    }
 
     @ApiOperation(value = "Create new object \"Customer\" in the database.",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -45,7 +42,11 @@ public class CustomerController {
             @ApiResponse(code = 500, message = "Internal server error", response = ResponseErrorDto.class)
     })
     @PostMapping(path = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createCustomer(@RequestBody @Valid CustomerCreateRequest request, BindingResult result) {
+    public ResponseEntity<?> createCustomer(
+            @RequestBody @Valid
+            @ApiParam(name = "request", required = true, value = "Customer Create Request")
+            CustomerCreateRequest request, BindingResult result) {
+        log.debug("Received request body for create customer: {}", request);
         ExceptionUtils.checkValidationErrors(result);
         service.createCustomer(request.getCustomerDto());
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -61,9 +62,14 @@ public class CustomerController {
     })
     @PutMapping(path = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CustomerEditResponse> editCustomer(@PathVariable("id") int id,
-                                                             @RequestBody @Valid CustomerEditRequest request,
-                                                             BindingResult result) {
+    public ResponseEntity<CustomerEditResponse> editCustomer(
+            @PathVariable("id")
+            @ApiParam(name = "id", required = true, value = "Customer id in DB")
+            int id,
+            @ApiParam(name = "request", required = true, value = "Customer Edit Request")
+            @RequestBody @Valid CustomerEditRequest request,
+            BindingResult result) {
+        log.debug("Received request body for edit customer: {}, id = {}", request, id);
         ExceptionUtils.checkValidationErrors(result);
         CustomerDto dto = request.getCustomerDto();
         CustomerDto dtoResult = service.editCustomer(id, dto);
@@ -83,11 +89,15 @@ public class CustomerController {
             @RequestParam(value = "firstName")
             @Valid
             @NotBlank
-            @Size(max = 100, message = "First name must be less than 100 characters") String firstName,
+            @ApiParam(name = "firstName", required = true, value = "Customer's first name")
+            @Size(max = 100, message = "First name must be less than 100 characters")
+            String firstName,
             @RequestParam(value = "lastName")
             @Valid
             @NotBlank
-            @Size(max = 100, message = "Last name must be less than 100 characters") String lastName) {
+            @ApiParam(name = "lastName", required = true, value = "Customer's last name")
+            @Size(max = 100, message = "Last name must be less than 100 characters")
+            String lastName) {
         List<CustomerDto> dtoList = service.findByFirstNameAndLastName(firstName, lastName);
         if (CollectionUtils.isEmpty(dtoList)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

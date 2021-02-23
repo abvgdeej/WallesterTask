@@ -12,8 +12,8 @@ spring:
     change-log: classpath:liquibase/rootChangeLog.xml
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DATABASE:postgres}
-    username: ${DB_USER}
-    password: ${DB_PASS}
+    username: admin
+    password: qwerty
     driverClassName: org.postgresql.Driver
     maximumPoolSize: 5
     type: com.zaxxer.hikari.HikariDataSource

@@ -7,6 +7,7 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -37,7 +38,8 @@ public class SwaggerConfig {
                 .paths(Predicates.not(PathSelectors.regex("/error"))) // Exclude Spring error controllers
                 .build()
                 .apiInfo(getApiInfo()) //
-                .tags(new Tag("Customers", "API \"Customers\""));
+                .tags(new Tag("Customers", "API \"Customers\""),
+                      new Tag("AppCommon", "Common API of WEB application"));
     }
 
     private ApiInfo getApiInfo() {
@@ -48,6 +50,7 @@ public class SwaggerConfig {
                 .license("Apache License Version 2.0")
                 .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
                 .version("0.0.1")
+                .contact(new Contact("Aleksandr Pitasov", "no url", "alexpit63@gmail.com"))
                 .build();
     }
 }
