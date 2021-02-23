@@ -1,7 +1,7 @@
 import com.wallester.backend.domain.dto.CustomerDto;
 import com.wallester.backend.domain.mapper.CustomerMapper;
 import com.wallester.backend.persist.entity.CustomerEntity;
-import com.wallester.backend.utils.Gender;
+import com.wallester.backend.domain.enums.Gender;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;

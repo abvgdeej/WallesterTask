@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="2021-02-24_0022" author="Aleksandr Pitasov" logicalFilePath="22_0022_backend.xml">
+        <sql dbms="postgresql">
+            insert into wallester.customers
+            (id, first_name, last_name, birth_date, gender, email, address)
+            values (1, 'Ivan', 'Ivanov', '1992-01-01', 'MALE', 'Ivan.Ivanov@gmail.com', 'Moscow, Tverskaya st., 1-1');
+
+            insert into wallester.customers
+            (id, first_name, last_name, birth_date, gender, email, address)
+            values (2, 'Petr', 'Petrov', '1992-01-01', 'MALE', 'Petr.Petrov@gmail.com', 'Moscow, Tverskaya st., 1-2');
+
+            insert into wallester.customers
+            (id, first_name, last_name, birth_date, gender, email, address)
+            values (3, 'Svetlana', 'Petrova', '1992-01-01', 'FEMALE', 'Svetlana.Petrova@gmail.com', 'Moscow, Tverskaya st., 1-2');
+
+            insert into wallester.customers
+            (id, first_name, last_name, birth_date, gender, email)
+            values (4, 'Aleksandr', 'Aleksandrov', '1992-01-01', 'MALE', 'Aleksandr.Aleksandrov@gmail.com');
+
+            insert into wallester.customers
+            (id, first_name, last_name, birth_date, gender, email, address)
+            values (5, 'Ivan', 'Ivanov', '2000-01-01', 'MALE', 'Ivan.Ivanov1@gmail.com', 'Moscow, Tverskaya st., 2-1');
+
+            insert into wallester.customers
+            (id, first_name, last_name, birth_date, gender, email, address)
+            values (6, 'Petr', 'Petrov', '1975-01-01', 'MALE', 'Petr.Petrov2@gmail.com', 'Moscow, Tverskaya st., 2-2');
+
+            insert into wallester.customers
+            (id, first_name, last_name, birth_date, gender, email, address)
+            values (7, 'Svetlana', 'Petrova', '1970-01-01', 'FEMALE', 'Svetlana.Petrova3@gmail.com', 'Moscow, Tverskaya st., 2-2');
+
+            insert into wallester.customers
+            (id, first_name, last_name, birth_date, gender, email)
+            values (8, 'Aleksandr', 'Aleksandrov', '1980-01-01', 'MALE', 'Aleksandr.Aleksandrov4@gmail.com');
+        </sql>
+    </changeSet>
+</databaseChangeLog>

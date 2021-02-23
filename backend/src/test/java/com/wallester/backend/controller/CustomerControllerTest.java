@@ -5,7 +5,7 @@ import com.wallester.backend.controller.request.CustomerEditRequest;
 import com.wallester.backend.controller.response.CustomersResponse;
 import com.wallester.backend.domain.dto.CustomerDto;
 import com.wallester.backend.exception.ApiException;
-import com.wallester.backend.utils.Gender;
+import com.wallester.backend.domain.enums.Gender;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Rule;
 import org.junit.Test;

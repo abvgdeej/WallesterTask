@@ -1,4 +1,4 @@
-package com.wallester.backend.utils;
+package com.wallester.backend.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package com.wallester.backend.persist.entity;
 
-import com.wallester.backend.utils.Gender;
+import com.wallester.backend.domain.enums.Gender;
 
 import javax.persistence.*;
 import java.sql.Date;
