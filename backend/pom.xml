@@ -5,7 +5,7 @@
     <parent>
         <artifactId>CustomerService</artifactId>
         <groupId>com.wallester</groupId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
     <name>customer-service</name>
     <artifactId>backend</artifactId>
