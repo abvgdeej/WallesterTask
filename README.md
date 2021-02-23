@@ -1,4 +1,4 @@
-#Wallester Task
+# Wallester Task
 
 Test task - simple CRUD web application.
 
@@ -6,7 +6,7 @@ Modules:
  - frontend - React.js app
  - backend - Java 13 app
 
-##Backend
+## Backend
 
 Backend API represents CRUD operations of Customer entity.
 
@@ -18,7 +18,7 @@ Swagger API doc:
 
     host:port/api/swagger-ui.html
 
-###Docker
+### Docker
 
 Repo has Dockerfile and .env file with needed variables.
 
