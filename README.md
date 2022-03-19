@@ -26,6 +26,10 @@ For push an image after build, use maven command:
 
     mvn clean install -Ddockerfile.useMavenSettingsForAuth=true
 
+For build project without docker build and tests:
+
+    mvn clean install -Ddockerfile.skip -DskipTests=true
+
 And configuration below for settings.xml:
 
 ```xml
